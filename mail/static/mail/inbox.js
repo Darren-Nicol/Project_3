@@ -37,6 +37,38 @@ function load_mailbox(mailbox) {
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
+
+  // update the mailbox with the latest emails 
+  fetch(`/emails/${mailbox}`)
+    .then(response => response.json()) // converts to json 
+    .then(emails => {
+      const sections_to_show = [['sender', 5], ['subject', 3], ['timestamp', 4]];
+      const artificial_first_email = {'sender': 'Sender', 'subject': 'Subject', 'timestamp': 'Date and time', 'read': true}; // create artificial first email
+      emails = [artificial_first_email, ...emails]; 
+      emails.forEach(email => { // loop through emails from mailbox and create a div 
+        const row_div_element = document.createElement('div');
+        row_div_element.classList.add("row", "email-line-box", email["read"] ? "read" : "unread");
+        if (email === artificial_first_email) {row_div_element.id = 'titled-first-row';}
+        sections_to_show.forEach(
+          section => {
+            const section_name = section[0];
+            const section_size = section[1];
+            const div_section = document.createElement('div');
+            div_section.classList.add(`col-${section_size}`, `${section_name}-section`);
+            div_section.innerHTML = `<p>${email[section_name]}</p>`;
+            row_div_element.append(div_section); // append to email list
+                      });
+          
+        if (email !== artificial_first_email){
+          row_div_element.addEventListener('click', () => load_email(email["id"], mailbox));
+        }
+
+        document.querySelector('#emails-view').append(row_div_element);
+      })
+    })
+
+    .catch(error => console.log(error)); // if error from fetch catch and log to console
+
 }
 
 // Send an email 
