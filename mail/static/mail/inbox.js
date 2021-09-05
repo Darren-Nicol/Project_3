@@ -52,7 +52,7 @@ function archive_email(email_id, to_archive) {
 // load email 
 
 function load_email(email_id, origin_mailbox){
-  // load pages you do and hide those you do not want
+  // load pages you do want and hide those you do not want
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none'; 
   document.querySelector('#single-email-view').style.display = 'block'; 
@@ -130,7 +130,7 @@ function load_mailbox(mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#single-email-view').style.display = 'none';
   document.querySelectorAll("button").forEach(button => button.classList.remove("selected"));
-  document.querySelector(`#${mailbox}`).classList.add("selected"); // uncaught type error: classList of Null
+  //document.querySelector(`#${mailbox}`).classList.add("selected"); // uncaught type error: classList of Null
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
